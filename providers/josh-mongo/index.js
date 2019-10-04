@@ -7,7 +7,6 @@ const _ = require('lodash');
 class JoshProvider {
 
   constructor(options) {
-
     if (!options.name) throw new Error('Must provide options.name');
     this.name = options.name;
     this.validateName();
@@ -30,7 +29,7 @@ class JoshProvider {
    */
   async init() {
     console.log('Initializing MongoDB');
-    this.client = await MongoClient.connect(this.url, { useNewUrlParser: true ,  useUnifiedTopology: true });
+    this.client = await MongoClient.connect(this.url, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log(this.client);
     this.db = this.client.db(this.dbName).collection(this.name);
     console.log(this.db);
@@ -78,9 +77,9 @@ class JoshProvider {
   }
 
   keyArray() {
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.db.find({}).toArray((err, docs) => {
-        if(err) reject(err);
+        if (err) reject(err);
         resolve(docs);
       });
     });
@@ -120,7 +119,7 @@ class JoshProvider {
     // Do not delete this internal method.
     this.name = this.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
   }
-  
+
   keyCheck(key) {
     return !_.isNil(key) && key[0] !== '$';
   }

@@ -1,7 +1,7 @@
-const _ = require('lodash');
+const _ = require('lodash'); // eslint-disable-line no-unused-vars
 
-const mongo = require("./providers/josh-mongo");
-const sqlite = require("./providers/josh-sqlite");
+const mongo = require('./providers/josh-mongo');
+const sqlite = require('./providers/josh-sqlite');
 
 // Custom error codes with stack support.
 const Err = require('./error.js');
@@ -16,24 +16,24 @@ class Josh {
       provider: Provider,
       name
     } = options;
-    
+
     this.version = pkgdata.version;
 
     if (!Provider || !name) {
-      throw new Err("Josh requires both a Name and Provider input ", 'JoshOptionsError');
+      throw new Err('Josh requires both a Name and Provider input ', 'JoshOptionsError');
     }
     const intializedProvider = new Provider({ name, ...options.options });
     if (intializedProvider.constructor.name != 'JoshProvider') {
       throw new Err(`Sorry boss, that doesn't seem to be a valid Provider in your options, there. This was just a ${intializedProvider.constructor.name}!`, 'JoshOptionsError');
     }
-    
+
     this.defer = new Promise(resolve => {
       this.ready = resolve;
     });
-    
+
     this.provider = intializedProvider;
     this.name = name;
-    
+
     this.provider.init().then(() => {
       this.ready();
       this.isReady = true;
@@ -46,7 +46,7 @@ class Josh {
   /*
    * Internal Method. Verifies that the database is ready, assuming persistence is used.
    */
-  readyCheck () {
+  readyCheck() {
     if (!this.isReady) throw new Err('Database is not ready. Refer to the documentation to use josh.defer', 'JoshReadyError');
     if (this.isDestroyed) throw new Err('This Josh has been destroyed and can no longer be used without being re-initialized.', 'JoshDestroyedError');
   }
@@ -63,18 +63,18 @@ class Josh {
     return this.provider.get(key);
   }
 
-  async setIn(key, path, value) {
+  async setIn(key, path, value) { // eslint-disable-line no-unused-vars
     this.readyCheck();
     return true;
   }
-  
+
   get keys() {
     this.readyCheck();
     return this.provider.keys();
   }
-  
+
   async delete(key = null) {
-    if(key == "::all::") {
+    if (key == '::all::') {
       this.provider.clear();
     } else {
       this.provider.delete(key);
@@ -86,5 +86,5 @@ class Josh {
 module.exports = Josh;
 module.exports.providers = {
   mongo,
-  sqlite,
+  sqlite
 };
